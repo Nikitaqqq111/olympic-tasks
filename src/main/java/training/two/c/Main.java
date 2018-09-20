@@ -17,24 +17,17 @@ public class Main {
         List<String> rows = downloader.download(path);
         int n = Integer.parseInt(rows.get(0));
         rows.remove(0);
-        int[][] table = new int[n + 1][n + 1];
-        int i = 1, j = 1;
+        int[][] table = new int[n][n];
+        int i = 0, j = 0;
         for (String row : rows) {
             for (String number : row.split(" ")) {
                 table[i][j] = Integer.parseInt(number);
                 j++;
             }
             i++;
-            j = 1;
+            j = 0;
         }
-        for (int p = 0; p < table.length; p++) {
-            for (int q = 0; q < table[p].length; q++) {
-                if (p == 0 || q == 0) {
-                    table[p][q] = 99999;
-                }
-            }
-        }
-        char[][] optimalPaths = PathUtils.findMinPath(table);
+        int[][] optimalPaths = PathUtils.findMinPath(table);
         System.out.println(Arrays.deepToString(optimalPaths));
     }
 
