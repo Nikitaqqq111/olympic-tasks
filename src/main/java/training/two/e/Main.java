@@ -2,11 +2,14 @@ package training.two.e;
 
 import training.Downloader;
 import training.IDownloader;
+import training.ISaver;
+import training.Saver;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -23,7 +26,9 @@ public class Main {
         } else {
             sum = Summator.sum(secondNumber, firstNumber);
         }
-        System.out.println(Arrays.toString(sum));
+        Path pathOut = Paths.get("src/main/resources/two_e.output");
+        ISaver saver = new Saver();
+        saver.save(pathOut, Collections.singletonList(convertToString(sum)));
     }
 
     private static int[] convertNumberFromString(String number) {
@@ -35,6 +40,23 @@ public class Main {
             index++;
         }
         return digits;
+    }
+
+    private static String convertToString(int[] number) {
+        List<Integer> integers = new ArrayList<>();
+        boolean foundNonZero = false;
+        for (int i = number.length - 1; i >= 0; i--) {
+            if (!foundNonZero && number[i] == 0) {
+                continue;
+            }
+            foundNonZero = true;
+            integers.add(number[i]);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Integer integer : integers) {
+            sb.append(integer);
+        }
+        return sb.toString();
     }
 
 }

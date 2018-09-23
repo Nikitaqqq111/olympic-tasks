@@ -4,6 +4,8 @@ import java.util.*;
 
 class SequenceArray {
 
+    static final List<String> sequences = new ArrayList<>();
+
     static List<List<Character>> getAllReShuffle(char[] sequence) {
         Set<Character> availableCharacters = new HashSet<>();
         for (char symbol : sequence) {
@@ -34,12 +36,10 @@ class SequenceArray {
     }
 
     private static final boolean[] isUsedArray = new boolean[8];
-    static int count = 0;
 
     static void shuffle(char[] sequence, int currentIndex, char[] resultSequence) {
         if (currentIndex == resultSequence.length) {
-            System.out.println(Arrays.toString(resultSequence));
-            count++;
+            sequences.add(new String(resultSequence));
         }
         for (int i = 0; i < sequence.length; i++) {
             if (!isUsedArray[i]) {

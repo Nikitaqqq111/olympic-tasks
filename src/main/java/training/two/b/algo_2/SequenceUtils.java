@@ -1,16 +1,18 @@
 package training.two.b.algo_2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class SequenceUtils {
+class SequenceUtils {
 
-    static int count = 0;
+    private static final List<String> sequences = new ArrayList<>();
 
-    public static void generateAllSequences(char[] symbols) {
+    static List<String> generateAllSequences(char[] symbols) {
         Arrays.sort(symbols);
-        System.out.println(symbols);
-        count++;
+        sequences.add(new String(symbols));
         generateNextSequence(symbols);
+        return sequences;
     }
 
     private static void generateNextSequence(char[] symbols) {
@@ -37,8 +39,7 @@ public class SequenceUtils {
         symbols[indexMinChar] = symbols[i - 1];
         symbols[i - 1] = swap;
         Arrays.sort(symbols, i, symbols.length);
-        System.out.println(symbols);
-        count++;
+        sequences.add(new String(symbols));
         generateNextSequence(symbols);
     }
 

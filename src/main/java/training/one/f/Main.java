@@ -2,6 +2,8 @@ package training.one.f;
 
 import training.Downloader;
 import training.IDownloader;
+import training.ISaver;
+import training.Saver;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,8 +20,9 @@ public class Main {
         List<Integer> cards = Arrays.stream(input.split(" "))
                 .map(Integer::parseInt).collect(Collectors.toList());
         String combination = Poker.calculate(cards);
-        System.out.println(combination);
-
+        Path pathOut = Paths.get("src/main/resources/one_f.output");
+        ISaver saver = new Saver();
+        saver.save(pathOut, Collections.singletonList(combination));
     }
 
 }

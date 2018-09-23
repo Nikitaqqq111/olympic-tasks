@@ -2,10 +2,13 @@ package training.two.c;
 
 import training.Downloader;
 import training.IDownloader;
+import training.ISaver;
+import training.Saver;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +31,17 @@ public class Main {
             j = 0;
         }
         int[][] optimalPaths = PathUtils.findMinPath(table);
-        System.out.println(Arrays.deepToString(optimalPaths));
+        Path pathOut = Paths.get("src/main/resources/two_c.output");
+        ISaver saver = new Saver();
+        saver.save(pathOut, convertToListString(optimalPaths));
+    }
+
+    private static List<String> convertToListString(int[][] table) {
+        List<String> stringList = new ArrayList<>();
+        for (int[] aTable : table) {
+            stringList.add(Arrays.toString(aTable));
+        }
+        return stringList;
     }
 
 }
