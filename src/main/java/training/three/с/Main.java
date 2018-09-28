@@ -1,4 +1,4 @@
-package training.three;
+package training.three.с;
 
 import training.Downloader;
 import training.IDownloader;

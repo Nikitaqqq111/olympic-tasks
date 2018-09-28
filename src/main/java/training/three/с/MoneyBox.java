@@ -1,4 +1,4 @@
-package training.three;
+package training.three.с;
 
 class MoneyBox {
     private final int weight;
