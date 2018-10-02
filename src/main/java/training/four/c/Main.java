@@ -52,7 +52,7 @@ public class Main {
         calculateGangsters(times, prices, fats);
         gangsters.sort(Comparator.comparingInt(gangster -> gangster.timeToArrive));
         int maxIncome = calculateMaxIncome(0, 0, 0);
-        System.out.println(maxIncome);
+        System.out.println("Optimal decision: " + calculateMaxIncomeOptimal());
         Path pathOut = Paths.get("src/main/resources/four_c.output");
         ISaver saver = new Saver();
         saver.save(pathOut, Collections.singletonList(String.valueOf(maxIncome)));
@@ -76,6 +76,53 @@ public class Main {
                     ? incomeWithCurrentGangster : incomeWithoutCurrentGangster;
         }
 
+    }
+
+    private static int[] gangstersRichment = new int[100 + 2];
+
+    private static int calculateMaxIncomeOptimal() {
+        int[][] maxIncomes = new int[2][100 + 3];
+        for (int i = 1; i < 30_101; i++) {
+            int line = changeLine();
+            fillGangsterRichment(i);
+            for (int j = 1; j < maxIncomes[0].length - 1; j++) {
+                if (line == 1) {
+                    maxIncomes[1][j] = getMax(maxIncomes[0][j - 1], maxIncomes[0][j], maxIncomes[0][j + 1]) + gangstersRichment[j];
+                } else {
+                    maxIncomes[0][j] = getMax(maxIncomes[1][j - 1], maxIncomes[1][j], maxIncomes[1][j + 1]) + gangstersRichment[j];
+                }
+            }
+        }
+        return maxIncomes[stateLine][1];
+    }
+
+    private static int changeLine() {
+        if (stateLine == 0) {
+            stateLine = 1;
+        } else {
+            stateLine = 0;
+        }
+        return stateLine;
+    }
+
+    private static int stateLine = 0;
+
+    private static void fillGangsterRichment(int time) {
+        for (int i = 0; i < gangstersRichment.length; i++) {
+            gangstersRichment[i] = 0;
+        }
+        for (Gangster gangster : gangsters) {
+            if (gangster.timeToArrive < gangster.fats) {
+                continue;
+            }
+            if (time == gangster.timeToArrive) {
+                gangstersRichment[gangster.fats] = gangstersRichment[gangster.fats] + gangster.wealth;
+            }
+        }
+    }
+
+    private static int getMax(int max1, int max2, int max3) {
+        return Math.max(Math.max(max1, max2), max3);
     }
 
     private static boolean isNotAccessible(Gangster gangster, int time, int doorPosition) {
