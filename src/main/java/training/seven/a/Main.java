@@ -1,4 +1,4 @@
-package training.seven;
+package training.seven.a;
 
 import training.Downloader;
 import training.IDownloader;
