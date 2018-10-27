@@ -1,4 +1,4 @@
-package training.eight;
+package training.eight.one;
 
 import training.Downloader;
 import training.IDownloader;
