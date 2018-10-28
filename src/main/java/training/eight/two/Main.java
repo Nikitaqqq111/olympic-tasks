@@ -6,12 +6,15 @@ import training.IDownloader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
-    private enum Mobile {
+    private static final List<Button> sequence = new ArrayList<>();
+
+    private enum Button {
         TWO(Arrays.asList('A', 'B', 'C')),
         THREE(Arrays.asList('D', 'E', 'F')),
         FOUR(Arrays.asList('G', 'H', 'I')),
@@ -23,12 +26,12 @@ public class Main {
 
         private final List<Character> characters;
 
-        Mobile(List<Character> characters) {
+        Button(List<Character> characters) {
             this.characters = characters;
         }
 
-        static Mobile getButtonForSymbol(char symbol) {
-            for (Mobile button : Mobile.values()) {
+        static Button getButtonForSymbol(char symbol) {
+            for (Button button : Button.values()) {
                 for (Character character : button.characters) {
                     if (symbol == character) {
                         return button;
@@ -42,9 +45,6 @@ public class Main {
             return characters.indexOf(symbol) + 1;
         }
 
-        boolean inButton(char symbol) {
-            return characters.indexOf(symbol) != -1;
-        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -53,40 +53,45 @@ public class Main {
         List<String> data = downloader.download(path);
         int n = Integer.parseInt(data.get(0));
         char[] chars = data.get(1).toCharArray();
-        System.out.println("Count of input sequences: " + calculateCountOfInputSequences(n, chars));
+        fillSequence(chars);
+        System.out.println(calculateCountOfSequences(n));
     }
 
-    private static int calculateCountOfInputSequences(int n, char[] chars) {
-        int[][] table = new int[n + 1][chars.length + 1];
-        table[0][0] = 1;
-        for (int i = 1; i < table.length; i++) {
-            for (int j = 1; j < table[0].length; j++) {
-                char symbol = chars[j - 1];
-                Mobile button = Mobile.getButtonForSymbol(symbol);
-                int index = button.getIndexFor(symbol);
-                for (int prev = 1; prev <= index; prev++) {
-                    if (i - prev < 0) {
-                        continue;
-                    }
-                    table[i][j] += table[i - prev][j - 1];
+    private static long calculateCountOfSequences(int n) {
+        long[][] cache = new long[2][sequence.size() + 1];
+        cache[0][0] = 1;
+        for (int i = 1; i <= n; i++) {
+            cache[i % 2][0] = 0;
+            for (int j = 1; j < cache[0].length; j++) {
+                Button currentButton = sequence.get(j - 1);
+                int count = 0;
+                int jj = j - 1;
+                while (jj >= 0 && count <= 4 && currentButton == sequence.get(jj)) {
+                    count++;
+                    jj--;
                 }
-                int k = 1;
-                int jj = j - 2;
-                while (jj > -1 && button.inButton(chars[jj])
-                        && index + button.getIndexFor(chars[jj]) <= button.characters.size()) {
-                    index += button.getIndexFor(chars[jj--]);
-                    if (j - ++k > -1) {
-                        table[i][j] += table[i - 1][j - k];
-                    } else {
-                        break;
+                cache[i % 2][j] = 0;
+                if (currentButton == Button.SEVEN || currentButton == Button.NINE) {
+                    for (int ii = 1; ii <= count; ii++) {
+                        cache[i % 2][j] = cache[i % 2][j] + cache[(i - 1) % 2][j - ii];
+                    }
+                } else {
+                    for (int ii = 1; ii <= Math.min(count, 3); ii++) {
+                        cache[i % 2][j] = cache[i % 2][j] + cache[(i - 1) % 2][j - ii];
                     }
                 }
-
             }
         }
-        for (int[] aTable : table) {
-            System.out.println(Arrays.toString(aTable));
-        }
-        return table[n][chars.length];
+        return cache[n % 2][sequence.size()];
     }
+
+    private static void fillSequence(char[] chars) {
+        for (char aChar : chars) {
+            Button button = Button.getButtonForSymbol(aChar);
+            for (int j = 1; j <= button.getIndexFor(aChar); j++) {
+                sequence.add(button);
+            }
+        }
+    }
+
 }
