@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class SequenceUtils {
+public class SequenceUtils {
 
     private static final List<String> sequences = new ArrayList<>();
 
-    static List<String> generateAllSequences(char[] symbols) {
+    public static List<String> generateAllSequences(char[] symbols) {
         Arrays.sort(symbols);
         sequences.add(new String(symbols));
         generateNextSequence(symbols);
