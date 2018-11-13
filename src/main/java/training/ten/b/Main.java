@@ -35,17 +35,17 @@ public class Main {
             counts[1] = 1;
         }
         for (int i = 2; i < n; i++) {
-            if (begins[i - 2].length() > 25) {
-                begins[i] = begins[i - 2];
+            if (begins[i - 1].length() > 25) {
+                begins[i] = begins[i - 1];
             } else {
-                begins[i] = begins[i - 2] + begins[i - 1];
+                begins[i] = begins[i - 1] + begins[i - 2];
             }
-            if (ends[i - 1].length() > 25) {
-                ends[i] = ends[i - 1];
+            if (ends[i - 2].length() > 25) {
+                ends[i] = ends[i - 2];
             } else {
-                ends[i] = ends[i - 2] + ends[i - 1];
+                ends[i] = ends[i - 1] + ends[i - 2];
             }
-            counts[i] = counts[i - 2] + counts[i - 1] + getMiddleCount(ends[i - 2], begins[i - 1], string);
+            counts[i] = counts[i - 2] + counts[i - 1] + getMiddleCount(ends[i - 1], begins[i - 2], string);
         }
         System.out.println(Arrays.toString(begins));
         System.out.println(Arrays.toString(ends));
