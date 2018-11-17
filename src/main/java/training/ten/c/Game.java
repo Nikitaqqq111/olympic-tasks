@@ -25,6 +25,9 @@ class Game {
     }
 
     void calculateAllSteps() {
+        if (step == 1) {
+            return;
+        }
         int index = 0;
         while (index < situations.size()) {
             Situation situation = situations.get(index);
@@ -40,7 +43,14 @@ class Game {
 
 
     int calculateWins(int index) {
-        if (situations.size() == 1) {
+        if (step == 1) {
+            int count = 0;
+            for (int strip : situations.get(0).strips){
+                count += strip;
+            }
+            return count % 2 == 1 ? 1 : -1;
+        }
+        if (situations.size() == 1 || situations.size() == 0) {
             return 0;
         }
         Situation currentSituation = situations.get(index);
